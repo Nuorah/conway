@@ -2,16 +2,38 @@ import numpy as np
 import time
 import sys
 import os
+import argparse
 
-np.set_printoptions(threshold=np.nan)
-length = 50
-width = 50
-grid = np.random.randint(2, size = (length, width))
+parser = argparse.ArgumentParser(description="Simple implementation of Conway's game of life.")
+
+parser.add_argument('--height', type=int, help="height of the grid.")
+parser.add_argument('--width', type=int, help="width of the grid.")
+parser.add_argument('--generations', type=int, help="Number of generations to display, default is infinite.")
+parser.add_argument('--speed', type=float, help="Speed at which the generations are displayed in Hertz.")
+
+args = parser.parse_args()
+
+if args.height:
+    height = args.height
+else:
+    height = 50
+
+if args.width:
+    width = args.width
+else:
+    width = 50
+
+if args.speed:
+    speed = args.speed
+else:
+    speed = 5
+
+grid = np.random.randint(2, size = (height, width))
 generation = 0
 
 
 def sum_around_cell(x, y, grid):
-    return grid[x-1, y-1] + grid[x-1, y] + grid[x-1, (y+1) % width] + grid[x, (y+1) % width] + grid[(x+1) % length, (y+1) % width] + grid[(x+1) % length, y] + grid[(x+1) % length, y-1] + grid[x, y-1]
+    return grid[x-1, y-1] + grid[x-1, y] + grid[x-1, (y+1) % width] + grid[x, (y+1) % width] + grid[(x+1) % height, (y+1) % width] + grid[(x+1) % height, y] + grid[(x+1) % height, y-1] + grid[x, y-1]
 
 
 def decide_next_cell(x, y, grid):
@@ -29,7 +51,7 @@ def decide_next_cell(x, y, grid):
 
 
 def next_grid(grid):
-    new_grid = np.zeros((length, width), dtype=int)
+    new_grid = np.zeros((height, width), dtype=int)
     it = np.nditer(grid, flags=['multi_index'])
     while not it.finished:
         new_grid[it.multi_index[0], it.multi_index[1]] = decide_next_cell(it.multi_index[0], it.multi_index[1], grid)
@@ -59,10 +81,18 @@ def display(grid):
 print(f"Generation : {generation}")
 display(grid)
 
-while input != 'exit':
-    grid = next_grid(grid)
-    generation += 1
-    print(f"Generation : {generation}")
-    display(grid)
-    time.sleep(0.2)
-    sys.stdout.flush()
+if args.generations:
+    while generation < args.generations:
+        grid = next_grid(grid)
+        generation += 1
+        print(f"Generation : {generation}")
+        display(grid)
+        time.sleep(1/speed)
+        sys.stdout.flush()
+else:
+    while True:
+        grid = next_grid(grid)
+        generation += 1
+        print(f"Generation : {generation}")
+        display(grid)
+        time.sleep(1/speed)
