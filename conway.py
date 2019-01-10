@@ -3,9 +3,6 @@ import time
 import sys
 import os
 
-def cls():
-    os.system('cls' if os.name=='nt' else 'clear')
-
 np.set_printoptions(threshold=np.nan)
 length = 50
 width = 50
@@ -30,8 +27,6 @@ def decide_next_cell(x, y, grid):
         else:
             return 0
 
-
-apply_decide_next_cell = np.vectorize(decide_next_cell)
 
 def next_grid(grid):
     new_grid = np.zeros((length, width), dtype=int)
