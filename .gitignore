@@ -5,4 +5,4 @@ venv/
 .idea/
 
 #data in txt
-list.txt
+matrix.txt
