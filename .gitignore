@@ -4,5 +4,8 @@ venv/
 #Pycharm
 .idea/
 
+#pycache
+__pycache__/
+
 #data in txt
 matrix.txt
