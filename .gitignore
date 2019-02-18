@@ -3,3 +3,6 @@ venv/
 
 #Pycharm
 .idea/
+
+#data in txt
+list.txt
