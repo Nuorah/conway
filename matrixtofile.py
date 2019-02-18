@@ -1,6 +1,6 @@
 import numpy as np
 
-def matrixtofile(list):
+def matrix_to_file(list):
     with open("matrix.txt", 'w') as file:
         file.write(str(list.shape))
         file.write('\n')
@@ -10,13 +10,13 @@ def matrixtofile(list):
             file.write('\n')
         file.close()
 
-def stringtocouple(string):
+def string_to_couple(string):
     couple = (int(string[1]), int(string[4]))
     return couple
 
-def filetomatrix(filename):
+def file_to_matrix(filename):
     with open(filename) as file:
-        matrix = np.zeros(stringtocouple(file.readline().strip()))
+        matrix = np.zeros(string_to_couple(file.readline().strip()))
         line = file.readline().strip()
         i = 0
         while(line != ''):
