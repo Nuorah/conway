@@ -3,6 +3,8 @@ import time
 import sys
 import os
 import argparse
+import matplotlib as mpl 
+import matplotlib.pyplot as plt
 
 parser = argparse.ArgumentParser(description="Simple implementation of Conway's game of life.")
 
@@ -10,6 +12,7 @@ parser.add_argument('--height', type=int, help="height of the grid.")
 parser.add_argument('--width', type=int, help="width of the grid.")
 parser.add_argument('--generations', type=int, help="Number of generations to display, default is infinite.")
 parser.add_argument('--speed', type=float, help="Speed at which the generations are displayed in Hertz.")
+parser.add_argument('--useConsole', action='store_true', help="Boolean for displaying results in window instead of console")
 
 args = parser.parse_args()
 
@@ -28,7 +31,16 @@ if args.speed:
 else:
     speed = 5
 
+useWindow = not args.useConsole
+
 grid = np.random.randint(2, size = (height, width))
+if useWindow:
+    fig = plt.figure()
+    im = plt.imshow(grid, cmap='gray')
+    plt.axis('off')
+    fig.canvas.draw()
+    plt.show(block=False)
+    fig.canvas.draw()
 generation = 0
 
 
@@ -59,24 +71,28 @@ def next_grid(grid):
     return new_grid
 
 def display(grid):
-    it = np.nditer(grid, flags=['multi_index'])
-    line = 0
-    while not it.finished:
-        if line == it.multi_index[0]:
-            if it[0] == 1:
-                print(u"\u25A1",end=' ')
+    if useWindow:
+        im.set_data(grid)
+        fig.canvas.draw()
+    else:
+        it = np.nditer(grid, flags=['multi_index'])
+        line = 0
+        while not it.finished:
+            if line == it.multi_index[0]:
+                if it[0] == 1:
+                    print(u"\u25A1",end=' ')
+                else:
+                    print(u"\u25A0",end= ' ')
+                #print(it[0], end='')
             else:
-                print(u"\u25A0",end= ' ')
-            #print(it[0], end='')
-        else:
-            print('')
-            if it[0] == 1:
-                print(u"\u25A1", end=' ')
-            else:
-                print(u"\u25A0", end= ' ')
-            line += 1
-        it.iternext()
-    print('\n')
+                print('')
+                if it[0] == 1:
+                    print(u"\u25A1", end=' ')
+                else:
+                    print(u"\u25A0", end= ' ')
+                line += 1
+            it.iternext()
+        print('\n')
 
 print(f"Generation : {generation}")
 display(grid)
